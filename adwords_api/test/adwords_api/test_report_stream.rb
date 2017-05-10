@@ -27,14 +27,14 @@ module AdwordsApi
     def download_report_as_stream(report_definition, cid = nil, &block)
       yield "a\n"
       yield "b\nc"
-      yield "\nd"
-      yield "e"
+      yield "\n\n\nd"
+      yield "e\n"
     end
   end
 end
 
 class TestReportStream < Test::Unit::TestCase
-  API_VERSION = :v201607
+  API_VERSION = :v201702
 
   # Initialize tests.
   def setup()
@@ -55,7 +55,7 @@ class TestReportStream < Test::Unit::TestCase
   end
 
   def test_read_by_line()
-    expected_lines = %w[a b c de]
+    expected_lines = ["a", "b", "c", "", "", "de"]
     actual_lines = []
     @report_utils.get_stream_helper(nil).each_line do |line|
       actual_lines << line

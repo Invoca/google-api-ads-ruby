@@ -1,3 +1,30 @@
+0.24.0:
+  - Removed deprecated API version v201605.
+  - Require google-ads-common 0.13.0 or later from now on. This removes
+    support for p12 key files for service accounts.
+  - Fixing issue with report_stream handling of streams ending in newline.
+  - Fixed issue #107. Improved error messaging when trying to specify
+    unrecognized fields in report definition.
+
+0.23.1:
+  - Support and examples for v201702.
+
+0.23.0:
+  - Removed examples and tests from bundled gem. For code examples, see:
+    https://github.com/googleads/google-api-ads-ruby/tree/master/adwords_api/examples
+
+0.22.0:
+  - Removed deprecated API version v201603.
+
+0.21.1:
+  - Support and examples for v201609.
+  - Added logging of reporting HTTP response headers on DEBUG level.
+  - Added support for extension setting services in batch_job_utils.
+
+0.21.0:
+  - Removed deprecated API version v201601.
+  - Disallowed user agents with non-ASCII characters.
+
 0.20.1:
   - Support and examples for v201607.
   - Fixed issue #91 related to BJS utilities handling special characters.
