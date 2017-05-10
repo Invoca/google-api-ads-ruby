@@ -82,9 +82,10 @@ module AdsCommon
       end
 
       # Overrides base get_token method to account for the token expiration.
-      def get_token(credentials = nil)
+      def get_token(credentials = nil, force_refresh = false)
         token = super(credentials)
-        token = refresh_token! if !@client.nil? && @client.expired?
+        token = refresh_token! if !@client.nil? &&
+            (force_refresh || @client.expired?)
         return token
       end
 
@@ -211,7 +212,7 @@ module AdsCommon
           if verification_code.nil? || verification_code.empty?
             uri_options = {
               :access_type => credentials[:oauth2_access_type],
-              :approval_prompt => credentials[:oauth2_approval_prompt]
+              :prompt => credentials[:oauth2_prompt]
             }.reject {|k, v| v.nil?}
             oauth_url = client.authorization_uri(uri_options)
             raise AdsCommon::Errors::OAuth2VerificationRequired.new(oauth_url)
