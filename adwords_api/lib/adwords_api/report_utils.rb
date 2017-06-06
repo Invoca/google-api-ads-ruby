@@ -231,6 +231,7 @@ module AdwordsApi
       else
         response = AdsCommon::Http.post_response(
             url, data, @api.config, headers)
+        log_headers(response.headers)
         check_for_errors(response)
         return response
       end
@@ -263,11 +264,15 @@ module AdwordsApi
 
     # Logs the request on debug level.
     def log_request(url, headers, body)
-      logger = @api.logger
-      logger.debug("Report request to: '%s'" % url)
-      logger.debug('HTTP headers: [%s]' %
+      @api.logger.debug("Report request to: '%s'" % url)
+      log_headers(headers)
+      @api.logger.debug(body)
+    end
+
+    # Logs HTTP headers on debug level.
+    def log_headers(headers)
+      @api.logger.debug('HTTP headers: [%s]' %
           (headers.map { |k, v| [k, v].join(': ') }.join(', ')))
-      logger.debug(body)
     end
 
     # Checks downloaded data for error signature. Raises ReportError if it
@@ -319,7 +324,17 @@ module AdwordsApi
     def report_definition_to_xml(report_definition)
       check_report_definition_hash(report_definition)
       add_report_definition_hash_order(report_definition)
-      return Gyoku.xml({:report_definition => report_definition})
+      begin
+        return Gyoku.xml({:report_definition => report_definition})
+      rescue ArgumentError => e
+        if e.message.include?("order!")
+          unknown_fields =
+              e.message.slice(e.message.index('['), e.message.length)
+          raise AdwordsApi::Errors::InvalidReportDefinitionError,
+              "Unknown report definition field(s): %s" % unknown_fields
+        end
+        raise e
+      end
     end
 
     # Checks if the report definition looks correct.
