@@ -73,6 +73,18 @@ class TestOAuth < Test::Unit::TestCase
     end
   end
 
+  def test_refresh_called_without_token
+    handler = AdsCommon::Auth::OAuth2Handler.new(AdsCommon::Config.new(), nil)
+
+    # Modify handler to not have a token
+    handler.instance_variable_set(:@token, nil)
+
+    # Make sure that we are still able to refresh the token.
+    assert_raise AdsCommon::Errors::AuthError, "Unable to refresh token due to missing oauth information.  Check account settings." do
+      handler.refresh_token!();
+    end
+  end
+
   def test_additional_scopes()
     config = AdsCommon::Config.new()
     config.set('authentication.oauth2_extra_scopes', ['extra-scope'])

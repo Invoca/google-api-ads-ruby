@@ -91,7 +91,10 @@ module AdsCommon
 
       # Refreshes access token from refresh token.
       def refresh_token!()
-        return nil if @token.nil? or @token[:refresh_token].nil?
+        if @token.nil? or @token[:refresh_token].nil?
+          raise AuthError.new("Unable to refresh token due to missing oauth information.  Check account settings.")
+        end
+
         begin
           if @client.issued_at.is_a?(String)
             @client.issued_at = Time.parse(@client.issued_at)
