@@ -73,7 +73,7 @@ class TestOAuth < Test::Unit::TestCase
     end
   end
 
-  def test_refresh_called_without_token
+  def test_get_token_called_without_token
     handler = AdsCommon::Auth::OAuth2Handler.new(AdsCommon::Config.new(), nil)
 
     # Modify handler to not have a token
@@ -81,7 +81,7 @@ class TestOAuth < Test::Unit::TestCase
 
     # Make sure that we are still able to refresh the token.
     assert_raise AdsCommon::Errors::AuthError, "Unable to refresh token due to missing oauth information.  Check account settings." do
-      handler.refresh_token!();
+      handler.get_token(nil, true);
     end
   end
 

@@ -86,15 +86,17 @@ module AdsCommon
         token = super(credentials)
         token = refresh_token! if !@client.nil? &&
             (force_refresh || @client.expired?)
+
+        if token.nil?
+          raise AuthError.new("Unable to get token due to missing oauth information.  Check account settings.")
+        end
+
         return token
       end
 
       # Refreshes access token from refresh token.
       def refresh_token!()
-        if @token.nil? or @token[:refresh_token].nil?
-          raise AuthError.new("Unable to refresh token due to missing oauth information.  Check account settings.")
-        end
-
+        return nil if @token.nil? or @token[:refresh_token].nil?
         begin
           if @client.issued_at.is_a?(String)
             @client.issued_at = Time.parse(@client.issued_at)
