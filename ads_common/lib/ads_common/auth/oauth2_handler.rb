@@ -88,7 +88,7 @@ module AdsCommon
             (force_refresh || @client.expired?)
 
         if token.nil?
-          raise AuthError.new("Unable to get token due to missing oauth information.  Check account settings.")
+          raise AdsCommon::Errors::AuthError.new("Unable to get token due to missing oauth information.  Check account settings.")
         end
 
         return token
