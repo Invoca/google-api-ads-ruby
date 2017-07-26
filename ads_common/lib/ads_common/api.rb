@@ -107,7 +107,7 @@ module AdsCommon
 
       token = begin
         auth_handler.get_token
-      rescue Adwords::Errors::AuthError
+      rescue AdsCommon::Errors::AuthError
         nil
       end
 
