@@ -104,7 +104,12 @@ module AdsCommon
       end
 
       auth_handler = get_auth_handler()
-      token = auth_handler.get_token()
+
+      token = begin
+        auth_handler.get_token
+      rescue AdsCommon::Errors::AuthError
+        nil
+      end
 
       # If token is invalid ask for a new one.
       if token.nil?

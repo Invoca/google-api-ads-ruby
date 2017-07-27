@@ -86,6 +86,11 @@ module AdsCommon
         token = super(credentials)
         token = refresh_token! if !@client.nil? &&
             (force_refresh || @client.expired?)
+
+        if token.nil?
+          raise AdsCommon::Errors::AuthError.new("Unable to get token due to missing oauth information.  Check account settings.")
+        end
+
         return token
       end
 
